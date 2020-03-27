@@ -36,7 +36,7 @@ function handleCountry(req, res, movies) {
   return filteredMovies;
 }
 
-function handleAverage(req, res) {
+function handleAverage(req, res, movies) {
   let { avg_vote } = req.query;
   avg_vote = Number(avg_vote);
   const filteredMovies = movies.filter(
@@ -54,8 +54,8 @@ function validateAuthorization(req, res, next) {
     return res.status(400).json({
       error: "Invalid authorization. auth code must use Bearer strategy"
     });
-  } else if (!authValue.includes(API_TOKEN)) {
-    return res.status(400).json({ error: "invalid authcode" });
+  } else if (!(authValue === `Bearer ${API_TOKEN}`)) {
+    return res.status(400).json({ error: "invalid api token" });
   }
   next();
 }
@@ -75,6 +75,4 @@ app.get("/movie", (req, res) => {
   return res.json(filteredMovies);
 });
 
-app.listen(8000, () => {
-  console.log("Started server on port 8000");
-});
+module.exports = app;
